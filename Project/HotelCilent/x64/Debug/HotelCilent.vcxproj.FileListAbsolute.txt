@@ -1,2 +1,0 @@
-E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\HotelCilent\x64\Debug\HotelCilent.exe
-E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\HotelCilent\x64\Debug\HotelCilent.pdb

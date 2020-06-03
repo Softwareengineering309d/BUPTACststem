@@ -1,9 +1,0 @@
-﻿  uic HotelCilent.ui
-  rcc HotelCilent.qrc
-  moc HotelCilent.h
-   RCC: Warning: No resources in 'E:\璇句欢璧勬枡\澶т笁涓媆杞欢宸ョ▼\璇剧▼浣滀笟\git\BUPTACststem\Project\HotelCilent\HotelCilent.qrc'.
-  HotelCilent.cpp
-  main.cpp
-  qrc_HotelCilent.cpp
-  moc_HotelCilent.cpp
-  HotelCilent.vcxproj -> E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\HotelCilent\x64\Debug\HotelCilent.exe
