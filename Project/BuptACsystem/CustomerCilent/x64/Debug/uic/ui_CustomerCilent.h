@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
@@ -22,9 +23,10 @@ QT_BEGIN_NAMESPACE
 class Ui_CustomerCilentClass
 {
 public:
+    QWidget *centralWidget;
+    QPushButton *pushButton;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
-    QWidget *centralWidget;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *CustomerCilentClass)
@@ -32,15 +34,19 @@ public:
         if (CustomerCilentClass->objectName().isEmpty())
             CustomerCilentClass->setObjectName(QString::fromUtf8("CustomerCilentClass"));
         CustomerCilentClass->resize(600, 400);
+        centralWidget = new QWidget(CustomerCilentClass);
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        pushButton->setGeometry(QRect(220, 160, 75, 23));
+        CustomerCilentClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(CustomerCilentClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 600, 23));
         CustomerCilentClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(CustomerCilentClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        CustomerCilentClass->addToolBar(mainToolBar);
-        centralWidget = new QWidget(CustomerCilentClass);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        CustomerCilentClass->setCentralWidget(centralWidget);
+        CustomerCilentClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(CustomerCilentClass);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         CustomerCilentClass->setStatusBar(statusBar);
@@ -53,6 +59,7 @@ public:
     void retranslateUi(QMainWindow *CustomerCilentClass)
     {
         CustomerCilentClass->setWindowTitle(QApplication::translate("CustomerCilentClass", "CustomerCilent", nullptr));
+        pushButton->setText(QApplication::translate("CustomerCilentClass", "text", nullptr));
     } // retranslateUi
 
 };

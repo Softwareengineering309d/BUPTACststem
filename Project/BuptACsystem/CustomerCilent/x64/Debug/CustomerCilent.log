@@ -1,9 +1,2 @@
-﻿  uic CustomerCilent.ui
-  rcc CustomerCilent.qrc
-  moc CustomerCilent.h
-   RCC: Warning: No resources in 'E:\璇句欢璧勬枡\澶т笁涓媆杞欢宸ョ▼\璇剧▼浣滀笟\git\BUPTACststem\Project\BuptACsystem\CustomerCilent\CustomerCilent.qrc'.
-  CustomerCilent.cpp
-  main.cpp
-  qrc_CustomerCilent.cpp
-  moc_CustomerCilent.cpp
+﻿  CustomerCilent.cpp
   CustomerCilent.vcxproj -> E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\BuptACsystem\CustomerCilent\x64\Debug\CustomerCilent.exe
