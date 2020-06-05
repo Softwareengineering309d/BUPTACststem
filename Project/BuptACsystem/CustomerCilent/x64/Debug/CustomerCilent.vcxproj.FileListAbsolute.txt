@@ -1,2 +1,0 @@
-E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\BuptACsystem\CustomerCilent\x64\Debug\CustomerCilent.exe
-E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\BuptACsystem\CustomerCilent\x64\Debug\CustomerCilent.pdb

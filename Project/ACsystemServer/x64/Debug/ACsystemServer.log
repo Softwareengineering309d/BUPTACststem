@@ -1,9 +1,0 @@
-﻿  uic ACsystemServer.ui
-  rcc ACsystemServer.qrc
-  moc ACsystemServer.h
-   RCC: Warning: No resources in 'E:\璇句欢璧勬枡\澶т笁涓媆杞欢宸ョ▼\璇剧▼浣滀笟\git\BUPTACststem\Project\ACsystemServer\ACsystemServer.qrc'.
-  ACsystemServer.cpp
-  main.cpp
-  qrc_ACsystemServer.cpp
-  moc_ACsystemServer.cpp
-  ACsystemServer.vcxproj -> E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\ACsystemServer\x64\Debug\ACsystemServer.exe
