@@ -22,6 +22,8 @@
 
 https://blog.csdn.net/u014695839/article/details/70041771
 
+解决tcp包粘包（前一个包还没发收完后一个包就发出了）https://www.cnblogs.com/findumars/p/5641848.html
+
 ## 1、消息格式是所有通信格式样例
 
 ## 2、用户消息格式是小组讨论后的用户客户端和服务器通信的格式
