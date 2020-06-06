@@ -33,5 +33,5 @@ private:
 	//创建服务对象时使用，默认费率
 	float defaultFeeRate;
 	//布尔值，标志调度对象是否已就绪
-	bool ready;
+	bool isReady;
 };
