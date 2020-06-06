@@ -1,2 +1,0 @@
-E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\ACsystemServer\x64\Debug\ACsystemServer.exe
-E:\课件资料\大三下\软件工程\课程作业\git\BUPTACststem\Project\ACsystemServer\x64\Debug\ACsystemServer.pdb
