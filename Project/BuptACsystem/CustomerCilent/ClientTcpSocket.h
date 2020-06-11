@@ -38,14 +38,15 @@ public:
 	//客户端应答 到达指定温度停止
 	void reachTargetTempStopBack(bool succeed);
 	//客户端应答 被抢占停止
-	void preemptedStopBack(bool succeed);
+	void preemptedStopBack(float currentTemp, bool succeed = true);
+	void preemptedStopBack(bool succeed = false);
 private slots:
 	void receiveData();
 	void serverDisconnected();
 
 signals:
-	//空调开启OK（返回默认参数） DefaultTemp DefaultFanSpeed
-	void turnOnAirConditionerOK(float, int);
+	//空调开启OK（返回默认参数） DefaultTemp DefaultFanSpeed Mode
+	void turnOnAirConditionerOK(float, int, bool);
 	//空调开启ERROR
 	void turnOnAirConditionerError();
 	//修改温度OK

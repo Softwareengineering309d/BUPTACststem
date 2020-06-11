@@ -5,6 +5,7 @@
  * CHANGE HISTORY	:
  * Author       Date            Description of change
  * Li Zhuo		June 6, 2020	Solve sticking problem
+ * Li Zhuo		June 11, 2020	add one parameter to turnOnAirConditionerOK and preemptedStopBack
  ************************************************************************/
 #include "ClientTcpSocket.h"
 
@@ -50,11 +51,12 @@ void ClientTcpSocket::receiveData() {
 		int request = -1;
 		QJsonObject data;
 		if (rootObj.contains("request") && rootObj["request"].isDouble()) {
-			request = rootObj["request"].toDouble();
+			request = rootObj["request"].toInt();
 		}
 		if (rootObj.contains("data") && rootObj["data"].isObject()) {
 			data = rootObj["data"].toObject();
 		}
+		qDebug() << request;
 		switch (request)
 		{
 		case 000:
@@ -71,10 +73,12 @@ void ClientTcpSocket::receiveData() {
 				int ack = rootObj["ACK"].toInt();
 				if (ack == 101) {
 					if (data.contains("DefaultTemp") && data["DefaultTemp"].isDouble() &&
-						data.contains("DefaultFanSpeed") && data["DefaultFanSpeed"].isDouble()) {
+						data.contains("DefaultFanSpeed") && data["DefaultFanSpeed"].isDouble() &&
+						data.contains("Mode") && data["Mode"].isBool()) {
 						float defaultTemp = (float)data["DefaultTemp"].toDouble();
 						int defaultFanSpeed = data["DefaultFanSpeed"].toInt();
-						emit turnOnAirConditionerOK(defaultTemp, defaultFanSpeed);
+						bool mode = data["Mode"].toBool();
+						emit turnOnAirConditionerOK(defaultTemp, defaultFanSpeed, mode);
 					}
 					else {
 						qDebug() << "Request Error 100: Bad defaultTemp or defaultFanSpeed";
@@ -101,45 +105,45 @@ void ClientTcpSocket::receiveData() {
 					emit changeTempError();
 				}
 				else {
-					qDebug() << "Request Error 100: Bad ACK: " << ack;
+					qDebug() << "Request Error 200: Bad ACK: " << ack;
 				}
 			}
 			else {
-				qDebug() << "Request Error 100: Bad ACK";
+				qDebug() << "Request Error 200: Bad ACK";
 			}
 			break;
 		case 300:
 			if (rootObj.contains("ACK") && rootObj["ACK"].isDouble()) {
 				int ack = rootObj["ACK"].toInt();
-				if (ack == 201) {
+				if (ack == 301) {
 					emit changeFanSpeedOK();
 				}
-				else if (ack == 202) {
+				else if (ack == 302) {
 					emit changeFanSpeedError();
 				}
 				else {
-					qDebug() << "Request Error 100: Bad ACK: " << ack;
+					qDebug() << "Request Error 300: Bad ACK: " << ack;
 				}
 			}
 			else {
-				qDebug() << "Request Error 100: Bad ACK";
+				qDebug() << "Request Error 300: Bad ACK";
 			}
 			break;
 		case 400:
 			if (rootObj.contains("ACK") && rootObj["ACK"].isDouble()) {
 				int ack = rootObj["ACK"].toInt();
-				if (ack == 201) {
+				if (ack == 401) {
 					emit closeAirConditionerOK();
 				}
-				else if (ack == 202) {
+				else if (ack == 402) {
 					emit closeAirConditionerError();
 				}
 				else {
-					qDebug() << "Request Error 100: Bad ACK: " << ack;
+					qDebug() << "Request Error 400: Bad ACK: " << ack;
 				}
 			}
 			else {
-				qDebug() << "Request Error 100: Bad ACK";
+				qDebug() << "Request Error 400: Bad ACK";
 			}
 			break;
 		case 500:
@@ -256,6 +260,7 @@ void ClientTcpSocket::reachTargetTempStopBack(bool succeed) {
 		rootObj.insert("request", 600);
 		rootObj.insert("ACK", 601);
 		write(QJsonDocument(rootObj).toJson(QJsonDocument::Compact) + "\n");
+		return;
 		//QString msg = "{\"request\":600,\"ACK\":601}";
 		//write(msg.toUtf8().data());
 		//flush();
@@ -272,12 +277,14 @@ void ClientTcpSocket::reachTargetTempStopBack(bool succeed) {
 	//Sleep(300);
 	//return;
 }
-void ClientTcpSocket::preemptedStopBack(bool succeed) {
+void ClientTcpSocket::preemptedStopBack(float currentTemp, bool succeed) {
 	if (succeed) {
-		QJsonObject rootObj;
+		QJsonObject rootObj, data;
+		data.insert("CurrentTemp", currentTemp);
 		rootObj.insert("request", 700);
 		rootObj.insert("ACK", 701);
 		write(QJsonDocument(rootObj).toJson(QJsonDocument::Compact) + "\n");
+		return;
 		//QString msg = "{\"request\":700,\"ACK\":701}";
 		//write(msg.toUtf8().data());
 		//flush();
@@ -286,11 +293,22 @@ void ClientTcpSocket::preemptedStopBack(bool succeed) {
 	}
 	QJsonObject rootObj;
 	rootObj.insert("request", 700);
-	rootObj.insert("ACK", 701);
+	rootObj.insert("ACK", 702);
 	write(QJsonDocument(rootObj).toJson(QJsonDocument::Compact) + "\n");
 	//QString msg = "{\"request\":700,\"ACK\":702}";
 	//write(msg.toUtf8().data());
 	//flush();
 	//Sleep(300);
 	//return;
+}
+
+void ClientTcpSocket::preemptedStopBack(bool succeed) {
+	if (succeed) {
+		qDebug() << "When preempted stop succeed, response need add current temp as a new parameter.";
+		return;
+	}
+	QJsonObject rootObj;
+	rootObj.insert("request", 700);
+	rootObj.insert("ACK", 702);
+	write(QJsonDocument(rootObj).toJson(QJsonDocument::Compact) + "\n");
 }

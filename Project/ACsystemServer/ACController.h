@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include "ACsystemServer.h"
 
 class ACController : public QObject
 {
@@ -16,7 +17,7 @@ public:
 	//槽函数，管理员点击开始运行时调用
 	void startUp();
 	//每隔一定时间调用一次，获取房间当前状态并展示在界面上
-	void checkRoomState();
+	QVector<int> checkRoomState();  //@注：应改为QVector<RoomBean>或者Room，总之就是一个存储有房间信息的东西
 
 private:
 	//由powerOn()函数调用，创建调度对象
