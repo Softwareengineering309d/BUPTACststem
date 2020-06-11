@@ -32,20 +32,20 @@ ACsystemServer::ACsystemServer(QWidget *parent)
     //    qDebug() << "roomID: " << roomID << "\nfanspeed" << fanSpeed;
     //});
 
-    //测试消息是否触发
-    connect(server, &TcpServer::turnOnAirConditioner, this, [=](int roomID) {
-        qDebug() << "Turn on conditioner Successful";
-        server->turnOnAirConditionerBack(roomID, 24, 3, 1);
-        server->changeTempBack(roomID, true);
-        server->changeFanSpeedBack(roomID, true);
+    ////测试消息是否触发
+    //connect(server, &TcpServer::turnOnAirConditioner, this, [=](int roomID) {
+    //    qDebug() << "Turn on conditioner Successful";
+    //    server->turnOnAirConditionerBack(roomID, 24, 3, 1);
+    //    server->changeTempBack(roomID, true);
+    //    server->changeFanSpeedBack(roomID, true);
 
-        Sleep(10000);
+    //    Sleep(10000);
 
-        server->turnOffAirConditionerBack(roomID, true);
-        server->serviceOn(roomID, 111);
-        server->reachTargetTempStop(roomID);
-        server->preemptedStop(roomID, 111, 222);
-    });
+    //    server->turnOffAirConditionerBack(roomID, true);
+    //    server->serviceOn(roomID, 111);
+    //    server->reachTargetTempStop(roomID);
+    //    server->preemptedStop(roomID, 111, 222);
+    //});
 }
 
 void ACsystemServer::receiveData(QByteArray data) {
