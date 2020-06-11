@@ -8,8 +8,6 @@
 #include "Scheduler.h"
 #include "ACController.h"
 
-class Scheduler;
-class ACController;
 
 class ACsystemServer : public QMainWindow
 {
@@ -17,11 +15,9 @@ class ACsystemServer : public QMainWindow
 
 public:
     ACsystemServer(QWidget *parent = Q_NULLPTR);
-
-    static Scheduler scheduler;
-    static ACController acController;
-    static QVector<int> waitingQueue;
-    static QVector<int> serviceQueue;
+    Scheduler scheduler;
+    ACController acController;
+    void ConnectServerScheduler();
 
 private slots:
     void receiveData(QByteArray data);

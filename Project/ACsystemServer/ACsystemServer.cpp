@@ -1,13 +1,11 @@
 #include "ACsystemServer.h"
 #include <QDebug.h>
 
-ACController ACsystemServer::acController(NULL);
-Scheduler ACsystemServer::scheduler(NULL);
-QVector<int> ACsystemServer::waitingQueue; //@注：记得改成QVector<RequestObj*>
-QVector<int> ACsystemServer::serviceQueue; //@注：记得改成QVector<ServiceObj*>
 
-ACsystemServer::ACsystemServer(QWidget *parent)
-    : QMainWindow(parent)
+
+
+ACsystemServer::ACsystemServer(QWidget* parent)
+    : QMainWindow(parent),scheduler(this),acController(this)
 {
     ui.setupUi(this);
     server = new TcpServer(this, 23333);
@@ -84,3 +82,53 @@ void ACsystemServer::receiveData(QByteArray data) {
 //void ACsystemServer::socketDisconnected() {
 //    qDebug() << "Client disconnected";
 //}
+
+void ACsystemServer::ConnectServerScheduler()
+{
+    /*
+    完成对收到信息的处理
+    */
+    //收到客户端的开机请求
+    connect(server, &TcpServer::turnOnAirConditioner, this, [=](int roomID) {
+        scheduler.requestOn(roomID);
+    });
+    //收到客户端的修改温度请求
+    connect(server, &TcpServer::changeTemp, this, [=](int roomID, float TargetTemp) {
+        scheduler.changetargetTemp(roomID, TargetTemp);
+    });
+    //收到客户端修改风速的请求
+    connect(server, &TcpServer::changeFanSpeed, this, [=](int roomID, int FanSpeed) {
+        scheduler.changeFanSpeed(roomID, FanSpeed);
+    });
+    //收到客户端的关机请求
+    connect(server, &TcpServer::turnOffAirConditioner, this, [=](int roomID) {
+        scheduler.requestOff(roomID);
+    });
+    //通知客户端服务启动后，客户端回成功，并且附带当前温度
+    connect(server, &TcpServer::serviceOnOK, this, [=](int roomID, float CurrentTemp) {
+        scheduler.changeCurrentTemp(roomID, CurrentTemp);
+    });
+    // 空调开启OK（返回默认参数）
+    connect(&scheduler, &Scheduler::turnonOK, server, [=](int roomID, float defaultTemp, int defaultFanSpeed,int Mode, bool succeed = true) {
+        server->turnOnAirConditionerBack(roomID, defaultTemp, Mode,defaultFanSpeed, succeed);
+    });
+    connect(&scheduler, &Scheduler::turnOffOK, server, [=](int roomID, bool succeed) {
+
+        server->turnOnAirConditionerBack(roomID, succeed);
+    });
+    connect(&scheduler, &Scheduler::changeTempBack, server, [=](int roomID, bool succeed) {
+        server->changeTempBack(roomID, succeed);
+    });
+    connect(&scheduler, &Scheduler::changeFanSpeedBack, server, [=](int roomID, bool succeed) {
+        server->changeFanSpeedBack(roomID, succeed);
+    });
+    connect(&scheduler, &Scheduler::serviceStart, server, [=](int roomID, int serverID) {
+        server->serviceOn(roomID, serverID);
+    });
+    connect(&scheduler, &Scheduler::waitStart, server, [=](int roomID, int waitID, int waitTime) {
+        server->preemptedStop(roomID, waitID, waitTime);
+    });
+    connect(&scheduler, &Scheduler::serviceFinish, server, [=](int roomID) {
+        server->reachTargetTempStop(roomID);
+    });
+}

@@ -1,5 +1,7 @@
 #include "ACController.h"
 
+
+
 ACController::ACController(QObject *parent)
 	: QObject(parent)
 {
@@ -10,26 +12,28 @@ ACController::~ACController()
 {
 }
 
-void ACController::powerOn() {
-	this->createScheduler();
+void ACController::powerOn(Scheduler* scheduler) {
+	this->createScheduler(scheduler);
 	return;
 }
 
-int ACController::createScheduler() {
-	ACsystemServer::scheduler.isReady = false;
-	ACsystemServer::scheduler.createServiceQueue();
-	ACsystemServer::scheduler.createWaitingQueue();
+
+
+int ACController::createScheduler(Scheduler* scheduler) {
+	scheduler->isReady = false;
+	scheduler->createServiceQueue();
+	scheduler->createWaitingQueue();
 	return 0;
 }
 
-void ACController::sendPara(int defaultMode, float tempHighLimit, float tempLowLimit, float defaultTargetTemp, float defaultFeeRate) {
-	ACsystemServer::scheduler.setPara(defaultMode, tempHighLimit, tempLowLimit, defaultTargetTemp, defaultFeeRate);
+void ACController::sendPara(Scheduler* scheduler,int defaultMode, float tempHighLimit, float tempLowLimit, float defaultTargetTemp, int FanSpeed,float Feerate) {
+	scheduler->setParm(defaultMode, defaultTargetTemp, FanSpeed, tempHighLimit, tempLowLimit, Feerate);
 }
 
-void ACController::startUp() {
-	ACsystemServer::scheduler.ready();
+void ACController::startUp(Scheduler* scheduler) {
+	scheduler->ready();
 }
 
-QVector<int> ACController::checkRoomState() {
-	return ACsystemServer::scheduler.getRoomState();
+QVector<int> ACController::checkRoomState(Scheduler* scheduler) {
+	return scheduler->getRoomState();
 }
