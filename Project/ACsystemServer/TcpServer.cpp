@@ -5,6 +5,7 @@
  * CHANGE HISTORY	:
  * Author       Date            Description of change
  * Li Zhuo		June 6, 2020	change to a QJson way to pack json msg
+ * Li Zhuo		June 11, 2020	modified parameters of preemptedStopOK and turnOnAirConditionerBack
  ************************************************************************/
 #include "TcpServer.h"
 
@@ -139,20 +140,22 @@ void TcpServer::receiveData(QByteArray data, qintptr socketDescriptor) {
 			if (rootObj.contains("ACK") && rootObj["ACK"].isDouble()) {
 				int ack = rootObj["ACK"].toInt();
 				if (ack == 701) {
+					float currentTemp;
+					if (data.contains("CurrentTemp") && data["CurrentTemp"].isDouble()) {
+						currentTemp = (float) data["CurrentTemp"].toDouble();
+					}
 					int roomID = socketDescriptorToRoomID.value(socketDescriptor, -1);
 					if (roomID != -1)
-						emit preemptedStopOK(roomID);
+						emit preemptedStopOK(roomID, currentTemp);
 					else
 						qDebug() << "Requset Error: roomID not exist.";
 				}
-				else if (ack == 701) {
-					if (ack == 701) {
-						int roomID = socketDescriptorToRoomID.value(socketDescriptor, -1);
-						if (roomID != -1)
-							emit preemptedStopError(roomID);
-						else
-							qDebug() << "Requset Error: roomID not exist.";
-					}
+				else if (ack == 702) {
+					int roomID = socketDescriptorToRoomID.value(socketDescriptor, -1);
+					if (roomID != -1)
+						emit preemptedStopError(roomID);
+					else
+						qDebug() << "Requset Error: roomID not exist.";
 				}
 			}
 			break;
@@ -175,11 +178,12 @@ void TcpServer::clientDisconnected(qintptr socketDescriptor) {
 	return;
 }
 
-void TcpServer::turnOnAirConditionerBack(int roomID, float defaultTemp, int defaultFanSpeed, bool succeed) {
+void TcpServer::turnOnAirConditionerBack(int roomID, float defaultTemp, int defaultFanSpeed, bool mode, bool succeed) {
 	TcpSocket* socket = findSocketByRoomID(roomID);
 	QJsonObject rootObj, data;
 	data.insert("DefaultTemp", defaultTemp);
 	data.insert("DefaultFanSpeed", defaultFanSpeed);
+	data.insert("Mode", mode);
 	rootObj.insert("request", 100);
 	rootObj.insert("ACK", 101);
 	rootObj.insert("data", data);

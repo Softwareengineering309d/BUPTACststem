@@ -1,12 +1,16 @@
 #include "ACsystemServer.h"
 #include <QDebug.h>
 
+ACController ACsystemServer::acController(NULL);
+Scheduler ACsystemServer::scheduler(NULL);
+QVector<int> ACsystemServer::waitingQueue; //@注：记得改成QVector<RequestObj*>
+QVector<int> ACsystemServer::serviceQueue; //@注：记得改成QVector<ServiceObj*>
+
 ACsystemServer::ACsystemServer(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
     server = new TcpServer(this, 23333);
-
 
     /**********************************
     * TcpServer使用说明： 李卓
@@ -28,20 +32,20 @@ ACsystemServer::ACsystemServer(QWidget *parent)
     //    qDebug() << "roomID: " << roomID << "\nfanspeed" << fanSpeed;
     //});
 
-    ////测试消息是否触发
-    //connect(server, &TcpServer::turnOnAirConditioner, this, [=](int roomID) {
-    //    qDebug() << "Turn on conditioner Successful";
-    //    server->turnOnAirConditionerBack(roomID, 24, 3);
-    //    server->changeTempBack(roomID, true);
-    //    server->changeFanSpeedBack(roomID, true);
+    //测试消息是否触发
+    connect(server, &TcpServer::turnOnAirConditioner, this, [=](int roomID) {
+        qDebug() << "Turn on conditioner Successful";
+        server->turnOnAirConditionerBack(roomID, 24, 3, 1);
+        server->changeTempBack(roomID, true);
+        server->changeFanSpeedBack(roomID, true);
 
-    //    Sleep(10000);
+        Sleep(10000);
 
-    //    server->turnOffAirConditionerBack(roomID, true);
-    //    server->serviceOn(roomID, 111);
-    //    server->reachTargetTempStop(roomID);
-    //    server->preemptedStop(roomID, 111, 222);
-    //});
+        server->turnOffAirConditionerBack(roomID, true);
+        server->serviceOn(roomID, 111);
+        server->reachTargetTempStop(roomID);
+        server->preemptedStop(roomID, 111, 222);
+    });
 }
 
 void ACsystemServer::receiveData(QByteArray data) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include "ACsystemServer.h"
 
 class Scheduler : public QObject
 {
@@ -14,14 +15,17 @@ public:
 	//将调度对象的状态设置为Ready
 	int ready();
 	//获得各房间当前状态
-	void getRoomState();  //注：返回值应为房间信息的数组，先写成了void，记得要改
+	QVector<int> getRoomState();  //@注：返回值应为房间信息的QVector，先写成了void，记得要改
 
-private:
 	//创建等待队列，创建调度对象时调用
 	int createWaitingQueue();
 	//创建服务队列，创建调度对象时调用
 	int createServiceQueue();
 
+	//布尔值，标志调度对象是否已就绪
+	bool isReady;
+
+private:
 	//创建服务对象时使用，默认模式
 	int defaultMode;
 	//创建服务对象时使用，最高温度
@@ -32,6 +36,5 @@ private:
 	float defaultTargetTemp;
 	//创建服务对象时使用，默认费率
 	float defaultFeeRate;
-	//布尔值，标志调度对象是否已就绪
-	bool isReady;
+
 };

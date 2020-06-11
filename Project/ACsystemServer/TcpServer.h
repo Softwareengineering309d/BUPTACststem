@@ -26,7 +26,7 @@ public:
 	TcpServer(QObject *parent, quint16 port = 23333);
 	~TcpServer();
 	//服务器应答 空调开启
-	void turnOnAirConditionerBack(int roomID, float defaultTemp, int defaultFanSpeed, bool succeed = true);
+	void turnOnAirConditionerBack(int roomID, float defaultTemp, int defaultFanSpeed, bool mode, bool succeed = true);
 	void turnOnAirConditionerBack(int roomID, bool succeed = false);
 	//服务器应答 修改温度
 	void changeTempBack(int roomID, bool succeed);
@@ -76,8 +76,8 @@ signals:
 	void reachTargetTempStopOK(int);
 	//到达指定温度停止-Error RoomId
 	void reachTargetTempStopError(int);
-	//被抢占停止-OK RoomId
-	void preemptedStopOK(int);
+	//被抢占停止-OK RoomId CurrentTemp
+	void preemptedStopOK(int, float);
 	//被抢占停止-Error RoomId
 	void preemptedStopError(int);
 

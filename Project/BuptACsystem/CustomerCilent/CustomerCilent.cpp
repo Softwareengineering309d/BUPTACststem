@@ -1,4 +1,6 @@
 #include "CustomerCilent.h"
+#include <random>
+#include <time.h>
 CustomerCilent::CustomerCilent(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -35,19 +37,21 @@ CustomerCilent::CustomerCilent(QWidget *parent)
 
     //
 
-    ////²âÊÔ´úÂë
-    //int roomid = 1;
-    //socket->turnOnAirConditioner(roomid);
-    //socket->changeFanSpeed(roomid, 3);
-    //socket->changeTemp(roomid, 26.5);
+    //²âÊÔ´úÂë
+    std::default_random_engine e;
+    e.seed(time(0));
+    int roomid = e() % 10;
+    socket->turnOnAirConditioner(roomid);
+    socket->changeFanSpeed(roomid, 3);
+    socket->changeTemp(roomid, 26.5);
 
-    ////Sleep(10000);
+    Sleep(10000);
 
-    //socket->closeAirConditioner(roomid);
-    //socket->serviceOnBack(roomid, 28.9, true);
-    //socket->serviceOnBack(roomid);
-    //socket->reachTargetTempStopBack(true);
-    //socket->preemptedStopBack(true);
+    socket->closeAirConditioner(roomid);
+    socket->serviceOnBack(roomid, 28.9, true);
+    socket->serviceOnBack(roomid);
+    socket->reachTargetTempStopBack(true);
+    socket->preemptedStopBack(true);
 
    /*
     //²âÊÔ´úÂë
