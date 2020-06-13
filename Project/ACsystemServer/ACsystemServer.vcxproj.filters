@@ -18,14 +18,34 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="ACsystemServer.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
     <QtMoc Include="ACsystemServer.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtUic Include="UIAdmin.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="UIManager.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="UIOptReport.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="UIPassword.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="UIReception.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="UIServerMain.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="ACsystemServer.qrc" />
@@ -47,6 +67,30 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="queueServiceObject1.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UIAdmin.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UIManager.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UIOptReport.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UIPassword.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UIReception.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="UIServerMain.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="RoomUpdate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="DBFacade.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -75,5 +119,43 @@
     <ClCompile Include="ACsystemServer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="UIAdmin.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIOptReport.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPassword.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIReception.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIServerMain.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="global.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Report.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RoomUpdate.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DBFacade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Report.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -62,7 +62,7 @@ void ClientTcpSocket::receiveData() {
 		case 000:
 			if (data.contains("TotalFee") && data["TotalFee"].isDouble() &&
 				data.contains("CurrentTemp") && data["CurrentTemp"].isDouble()) {
-				emit heartBeat(data["TotalFee"].toInt(), (float)data["CurrentTemp"].toDouble());
+				emit heartBeat(data["TotalFee"].toDouble(), (float)data["CurrentTemp"].toDouble());
 			}
 			else {
 				qDebug() << "Request Error 000: Bad TotalFee or CurrentTemp";
@@ -311,4 +311,13 @@ void ClientTcpSocket::preemptedStopBack(bool succeed) {
 	rootObj.insert("request", 700);
 	rootObj.insert("ACK", 702);
 	write(QJsonDocument(rootObj).toJson(QJsonDocument::Compact) + "\n");
+}
+
+void ClientTcpSocket::keepAlive(float currentTemp) {
+	QJsonObject rootObj, data;
+	data.insert("CurrentTemp", currentTemp);
+	rootObj.insert("request", 000);
+	rootObj.insert("data", data);
+	write(QJsonDocument(rootObj).toJson(QJsonDocument::Compact) + "\n");
+	return;
 }

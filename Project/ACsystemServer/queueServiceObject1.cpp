@@ -1,6 +1,6 @@
 #include"queueRequestObject1.h"
 #include"queueServiceObject1.h"
-
+#include "global.h"
 queueServiceObject::queueServiceObject(QObject *parent)
 	: QObject(parent)
 {
@@ -30,6 +30,7 @@ void queueServiceObject::service()
 			connect.....
 			*/
 			emit servicefinish(queue[i]->getServerID());
+			
 			continue;
 		}
 		//处于等待状态（可能是从服务状态切换到等待状态的一个瞬间被服务了，但是还是要避免这种情况）
@@ -44,6 +45,8 @@ void queueServiceObject::service()
 			temp = queue[i]->getCurrenTemp();
 			temp = temp + delta;
 			fee= delta;
+			temp = round(temp * 100) / 100.0;
+			fee=round(fee*100)/100.0;		
 			if (temp > queue[i]->getTargetTemp())
 			{
 				temp = queue[i]->getTargetTemp();
@@ -55,6 +58,7 @@ void queueServiceObject::service()
 			todo1：服务完成，结果写进数据库
 			connect....
 			*/
+			RoomUp->update_timing(queue[i]->getRoomID(), WORKING, queue[i]->getCurrenTemp(), queue[i]->getTargetTemp(), queue[i]->getFanSpeed(), queue[i]->getFee());
 			qDebug() <<"Roomid:"<< queue[i]->getRoomID()<<"  currenttemp:"<<queue[i]->getCurrenTemp()<<"  fee: "<<queue[i]->getFee()<<"  fanspeed:"<<queue[i]->getFanSpeed();
 			if (temp == queue[i]->getTargetTemp())
 			{
@@ -66,6 +70,8 @@ void queueServiceObject::service()
 			temp = queue[i]->getCurrenTemp();
 			temp = temp + delta;
 			fee = delta;
+			temp = round(temp * 100) / 100.0;
+			fee = round(fee * 100) / 100.0;
 			if (temp > queue[i]->getTargetTemp())
 			{
 				temp = queue[i]->getTargetTemp();
@@ -77,6 +83,7 @@ void queueServiceObject::service()
 			todo1：服务完成，结果写进数据库
 			connect....
 			*/
+			RoomUp->update_timing(queue[i]->getRoomID(), WORKING, queue[i]->getCurrenTemp(), queue[i]->getTargetTemp(), queue[i]->getFanSpeed(), queue[i]->getFee());
 			qDebug() << "Roomid:" << queue[i]->getRoomID() << "  currenttemp:" << queue[i]->getCurrenTemp() << "  fee: " << queue[i]->getFee() << "  fanspeed:" << queue[i]->getFanSpeed();
 			if (temp == queue[i]->getTargetTemp())
 			{
@@ -88,6 +95,8 @@ void queueServiceObject::service()
 			temp = queue[i]->getCurrenTemp();
 			temp = temp + delta;
 			fee = delta;
+			temp = round(temp * 100) / 100.0;
+			fee = round(fee * 100) / 100.0;
 			if (temp > queue[i]->getTargetTemp())
 			{
 				temp = queue[i]->getTargetTemp();
@@ -99,6 +108,7 @@ void queueServiceObject::service()
 			todo1：服务完成，结果写进数据库
 			connect....
 			*/
+			RoomUp->update_timing(queue[i]->getRoomID(), WORKING, queue[i]->getCurrenTemp(), queue[i]->getTargetTemp(), queue[i]->getFanSpeed(), queue[i]->getFee());
 			qDebug() << "Roomid:" << queue[i]->getRoomID() << "  currenttemp:" << queue[i]->getCurrenTemp() << "  fee: " << queue[i]->getFee() << "  fanspeed:" << queue[i]->getFanSpeed();
 			if (temp == queue[i]->getTargetTemp())
 			{

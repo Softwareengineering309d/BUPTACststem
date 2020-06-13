@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>575</width>
     <height>400</height>
    </rect>
   </property>
@@ -14,17 +14,255 @@
    <string>CustomerCilent</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QLabel" name="label_roomid">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>160</y>
-      <width>75</width>
-      <height>23</height>
+      <x>50</x>
+      <y>0</y>
+      <width>51</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>text</string>
+     <string>RoomID</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_initial_temp">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>0</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Initial Temp</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="initial_temp_text">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>20</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="turnon_button">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>30</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Turn on</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="show_fee">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>80</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="show_current_temp">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>80</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_fee">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>60</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Fee</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_current_temp">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>60</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Current Temp</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="input_target_temp">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>210</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_change_target_temp">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>121</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Target Temp</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="input_fan">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>280</y>
+      <width>111</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>high</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>mid</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>low</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_change_target_fan">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Target Fan Speed</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="change_temp_button">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>210</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Temp</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="change_fan_button">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>270</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Change Fan Speed</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="turnoff_button">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>100</y>
+      <width>81</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Turn off</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="roomid_text">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="show_target_temp">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="show_target_fan">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>140</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_target_temp">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>120</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Target Temp</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_fan">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>120</y>
+      <width>91</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Fan Speed</string>
     </property>
    </widget>
   </widget>
@@ -33,8 +271,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
-     <height>23</height>
+     <width>575</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>

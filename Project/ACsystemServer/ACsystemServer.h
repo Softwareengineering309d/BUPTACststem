@@ -1,22 +1,27 @@
 #pragma once
 
-#include <QtWidgets/QMainWindow>
+#include <qobject.h>
 #include <qvector.h>
-#include "ui_ACsystemServer.h"
 #include "TcpSocket.h"
 #include "TcpServer.h"
 #include "Scheduler.h"
 #include "ACController.h"
+#include"DBFacade.h"
 
 
-class ACsystemServer : public QMainWindow
+class ACsystemServer : public QObject
 {
     Q_OBJECT
 
 public:
-    ACsystemServer(QWidget *parent = Q_NULLPTR);
+    ACsystemServer(QObject* parent);
+    ACsystemServer() :scheduler(this),acController(this),dbfacade(this){
+        server = new TcpServer(this, 23333);
+        ConnectServerScheduler();
+    };
     Scheduler scheduler;
     ACController acController;
+    DBFacade dbfacade;
     void ConnectServerScheduler();
 
 private slots:
@@ -26,7 +31,6 @@ private slots:
 //    void socketDisconnected();
 
 private:
-    Ui::ACsystemServerClass ui;
     TcpServer* server;
     quint16 port = 23333;
 };

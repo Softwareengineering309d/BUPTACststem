@@ -11,6 +11,7 @@ class ACController : public QObject
 public:
 	ACController(QObject *parent);
 	~ACController();
+	void connect_with_manager();
 	//槽函数，点击开机按钮或者打开程序时触发
 	void powerOn(Scheduler* scheduler);
 	//槽函数，管理员开机输入参数时调用，传送参数到调度对象

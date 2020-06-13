@@ -8,7 +8,7 @@
  ************************************************************************/
 #pragma once
 
-#include <QTcpSocket>
+#include <QtNetwork/qtcpsocket.h>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonParseError>
@@ -40,13 +40,15 @@ public:
 	//客户端应答 被抢占停止
 	void preemptedStopBack(float currentTemp, bool succeed = true);
 	void preemptedStopBack(bool succeed = false);
+	//客户端心跳包
+	void keepAlive(float curretnTemp);
 private slots:
 	void receiveData();
 	void serverDisconnected();
 
 signals:
 	//空调开启OK（返回默认参数） DefaultTemp DefaultFanSpeed Mode
-	void turnOnAirConditionerOK(float, int, bool);
+	void turnOnAirConditionerOK(float, int, bool);//0制冷 1制热
 	//空调开启ERROR
 	void turnOnAirConditionerError();
 	//修改温度OK
@@ -71,5 +73,6 @@ signals:
 	//被抢占停止（服务暂时终止了，因此要回送wait号） WaitId WaitTime
 	void preemptedStop(int, int);
 	//000心跳包，告知客户端当前的温度和费用，直到服务暂停或停止 TotalFee CurrentTemp
-	void heartBeat(int, float);
+	void heartBeat(float, float);
+
 };

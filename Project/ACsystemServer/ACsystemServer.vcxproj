@@ -65,7 +65,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -82,10 +82,20 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalDependencies>Qt5PrintSupport.lib;Qt5Sql.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="ACsystemServer.qrc" />
-    <QtUic Include="ACsystemServer.ui" />
     <QtMoc Include="ACsystemServer.h" />
+    <QtUic Include="UIAdmin.ui" />
+    <QtUic Include="UIManager.ui" />
+    <QtUic Include="UIOptReport.ui" />
+    <QtUic Include="UIPassword.ui" />
+    <QtUic Include="UIReception.ui" />
+    <QtUic Include="UIServerMain.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ACController.h" />
@@ -102,18 +112,52 @@
   <ItemGroup>
     <ClCompile Include="ACController.cpp" />
     <ClCompile Include="ACsystemServer.cpp" />
+    <ClCompile Include="DBFacade.cpp" />
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="queueRequestObject1.cpp" />
     <ClCompile Include="queueServiceObject1.cpp" />
+    <ClCompile Include="Report.cpp" />
+    <ClCompile Include="RoomUpdate.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="TcpServer.cpp" />
     <ClCompile Include="TcpSocket.cpp" />
+    <ClCompile Include="UIAdmin.cpp" />
+    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UIOptReport.cpp" />
+    <ClCompile Include="UIPassword.cpp" />
+    <ClCompile Include="UIReception.cpp" />
+    <ClCompile Include="UIServerMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="queueRequestObject1.h" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="queueServiceObject1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UIAdmin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UIManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UIOptReport.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UIPassword.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UIReception.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="UIServerMain.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="DBFacade.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="Report.h" />
+    <QtMoc Include="RoomUpdate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

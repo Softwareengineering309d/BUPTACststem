@@ -41,7 +41,7 @@ public:
 	//服务器通知 通知客户端服务已被停止 被抢占停止
 	void preemptedStop(int roomID, int waitID, int waitTime);
 	//心跳包
-	void keepAlive(int roomID, int totalFee, float CurrentTemp);
+	void keepAlive(int roomID, float totalFee, float CurrentTemp);
 
 	QList<TcpSocket*> clientSocketList;
 
@@ -80,7 +80,8 @@ signals:
 	void preemptedStopOK(int, float);
 	//被抢占停止-Error RoomId
 	void preemptedStopError(int);
-
+	//客户心跳包
+	void heartBeat(float);
 	//用于测试
 	void receiveDataRaw(QByteArray);
 };

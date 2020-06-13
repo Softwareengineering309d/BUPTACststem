@@ -1,15 +1,15 @@
 #include "ACsystemServer.h"
+#include"global.h"
 #include <QDebug.h>
 
 
 
 
-ACsystemServer::ACsystemServer(QWidget* parent)
-    : QMainWindow(parent),scheduler(this),acController(this)
+ACsystemServer::ACsystemServer(QObject* parent)
+    :QObject(parent),scheduler(this),acController(this),dbfacade(this)
 {
-    ui.setupUi(this);
     server = new TcpServer(this, 23333);
-
+    ConnectServerScheduler();
     /**********************************
     * TcpServer使用说明： 李卓
     * 1. 从客户端收到消息：
@@ -112,23 +112,33 @@ void ACsystemServer::ConnectServerScheduler()
     connect(&scheduler, &Scheduler::turnonOK, server, [=](int roomID, float defaultTemp, int defaultFanSpeed,int Mode, bool succeed = true) {
         server->turnOnAirConditionerBack(roomID, defaultTemp, Mode,defaultFanSpeed, succeed);
     });
+    //关机成功，给客户回包
     connect(&scheduler, &Scheduler::turnOffOK, server, [=](int roomID, bool succeed) {
 
-        server->turnOnAirConditionerBack(roomID, succeed);
+        server->turnOffAirConditionerBack(roomID, succeed);
     });
+    //修改温度成功，给客户回包
     connect(&scheduler, &Scheduler::changeTempBack, server, [=](int roomID, bool succeed) {
         server->changeTempBack(roomID, succeed);
     });
+    //修改风速成功，给客户回包
     connect(&scheduler, &Scheduler::changeFanSpeedBack, server, [=](int roomID, bool succeed) {
         server->changeFanSpeedBack(roomID, succeed);
     });
+    //服务启动，给客户回包
     connect(&scheduler, &Scheduler::serviceStart, server, [=](int roomID, int serverID) {
         server->serviceOn(roomID, serverID);
     });
+    //进入等待状态，给客户回包
     connect(&scheduler, &Scheduler::waitStart, server, [=](int roomID, int waitID, int waitTime) {
         server->preemptedStop(roomID, waitID, waitTime);
     });
+    //服务完成，给客户回包
     connect(&scheduler, &Scheduler::serviceFinish, server, [=](int roomID) {
         server->reachTargetTempStop(roomID);
+    });
+    //给客户端回心跳包
+    connect(RoomUp, &RoomUpdate::signal_update_timing, server, [=](int RoomId, int state, float cur_temp, float dist_temp, int speed, float fee) {
+        server->keepAlive(RoomId, fee, cur_temp);
     });
 }

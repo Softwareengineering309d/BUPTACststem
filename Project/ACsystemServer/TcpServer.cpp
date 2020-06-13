@@ -71,6 +71,11 @@ void TcpServer::receiveData(QByteArray data, qintptr socketDescriptor) {
 		}
 		switch (request)
 		{
+		case 000:
+			if (data.contains("CurrentTemp") && data["CurrentTemp"].isDouble()) {
+				emit heartBeat((float)data["CurrentTemp"].toDouble());
+			}
+			break;
 		case 100:
 			if (data.contains("RoomId") && data["RoomId"].isDouble()) {
 				int roomID = data["RoomId"].toInt();
@@ -100,10 +105,10 @@ void TcpServer::receiveData(QByteArray data, qintptr socketDescriptor) {
 			if (rootObj.contains("ACK") && rootObj["ACK"].isDouble()) {
 				int ack = rootObj["ACK"].toInt();
 				if (ack == 501) {
-					if (data.contains("CurrentTemp") && data["CurrentTemp"].isDouble()) {
+					if (data.contains("currentTemp") && data["currentTemp"].isDouble()) {
 						int roomID = socketDescriptorToRoomID.value(socketDescriptor, -1);
 						if (roomID != -1)
-							emit serviceOnOK(roomID, (float)data["CurrentTemp"].toDouble());
+							emit serviceOnOK(roomID, (float)data["currentTemp"].toDouble());
 						else
 							qDebug() << "Requset Error: roomID not exist.";
 					}
@@ -321,7 +326,7 @@ void TcpServer::preemptedStop(int roomID, int waitID, int waitTime) {
 	//Sleep(300);
 	return;
 }
-void TcpServer::keepAlive(int roomID, int totalFee, float CurrentTemp) {
+void TcpServer::keepAlive(int roomID, float totalFee, float CurrentTemp) {
 	TcpSocket* socket = findSocketByRoomID(roomID);
 	QJsonObject rootObj, data;
 	data.insert("TotalFee", totalFee);

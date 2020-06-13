@@ -33,19 +33,13 @@ public:
 
 	//布尔值，标志调度对象是否已就绪
 	bool isReady;
-	/*
-	todo：完成从数据库中查询上次费用的函数
-	*/
+	//接受到客户开机请求
 	void requestOn(int RoomID);
 
 	void requestOff(int RoomID);
-	/*
-	todo:根据返回值选择给用户的修改温度的请求回成功/不在调温范围的ACK
-	*/
+
 	bool changetargetTemp(int RoomID, float targetTemp);
-	/*
-	todo:完成调度
-	*/
+
 	void changeFanSpeed(int RoomID, int FanSpeed);
 	//向数据库中写入新数据
 	void changeCurrentTemp(int RoomID, float CurrentTemp);
@@ -60,7 +54,7 @@ public:
 	*/
 	void endwait(int WaitID);
 signals:
-	void turnonOK(int, float, int, bool);
+	void turnonOK(int, float, int, int,bool);
 	void turnonEROOR(int, bool);
 	void turnOffOK(int,bool);
 	void changeTempBack(int, bool);
