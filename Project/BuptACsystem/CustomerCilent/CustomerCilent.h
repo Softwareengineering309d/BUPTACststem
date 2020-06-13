@@ -36,7 +36,7 @@ signals:
 private:
     Ui::CustomerCilentClass ui;
     QString serverIP = "127.0.0.1";
-    quint16 serverPort = 23333;
+    quint16 serverPort = 8888;
 
     int roomid;
     float initial_temp;//³õÊ¼ÎÂ¶È

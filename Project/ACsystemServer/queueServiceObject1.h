@@ -96,9 +96,6 @@ public:
 	queueServiceObject(QObject *parent);
 	~queueServiceObject();
 	//定时10s启动服务，计算当前温度
-	/*
-	todo：完成服务向数据库中写房间信息（使用信号槽）。
-	*/
 	void service();
 	//根据房间号、服务号查找服务对象
 	ServiceObject* getServerObjectRoomID(int RoomID);

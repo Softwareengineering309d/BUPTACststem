@@ -27,6 +27,8 @@ public:
     void air_SendPara(int defaultMode, float tempHighLimit, float tempLowLimit, float defaultTargetTemp, float defaultFeeRate);
     // 运行
     void air_StartUp( );
+    // 更新ui
+    void update_ui(int RoomId, int state, float cur_temp, float dist_temp, int speed, float fee);
 
 signals:
     void signal_update_server(int RoomId, int serverState);
@@ -34,6 +36,7 @@ signals:
     void signal_air_PowerOn();
     void signal_air_SendPara(int defaultMode, float tempHighLimit, float tempLowLimit, float defaultTargetTemp, float defaultFeeRate);
     void signal_air_StartUp();
+    void signal_update_ui(int RoomId, int state, float cur_temp, float dist_temp, int speed, float fee);
 };
 
 #endif // ROOMINFO_H

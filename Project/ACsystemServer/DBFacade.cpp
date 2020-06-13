@@ -8,10 +8,14 @@ DBFacade::DBFacade(QObject *parent)
 	createStatTable();
 	createOptTable();
 	createServiceTable();
+	timer = new QTimer(this);
+	timer->start(INTERVAL/2);
+	connect(timer, &QTimer::timeout, this, &DBFacade::updateUI);
 }
 
 DBFacade::~DBFacade()
 {
+	db.close();
 }
 
 void DBFacade::connectDB()
@@ -36,17 +40,24 @@ void DBFacade::connectDB()
 void DBFacade::createStatTable()
 {
 	QSqlQuery query(db);
-	sqlsentence = "create table RoomStat(RoomID int PRIMARY KEY,Mode varchar(50),stat varchar(50),cur_temp float,tar_temp float,cur_speed varchar(50),fee float,feerate int,schedulecount int)";
-	query.exec(sqlsentence);
-	qDebug() << db.lastError();
+    sqlsentence = "create table RoomStat(RoomID int PRIMARY KEY,Mode varchar(50),stat varchar(50),cur_temp float,tar_temp float,cur_speed varchar(50),fee float,feerate int,schedulecount int)";
+	query.prepare(sqlsentence);
+	if (!query.exec(sqlsentence)) 
+	{ 
+		qDebug() << query.lastError();
+	}
+	query.finish();
 }
 
 void DBFacade::createServiceTable()
 {
 	QSqlQuery query(db);
 	QString sql2 = "create table RoomService(RoomID int PRIMARY KEY,Start_time varchar(50),End_time varchar(50),Service_time int ,fee float,cur_speed int)";
-	query.exec(sql2);
-	qDebug() << db.lastError();
+	query.prepare(sql2);
+	if (!query.exec())
+	{
+		qDebug() << query.lastError();
+	}
 	
 }
 
@@ -55,8 +66,11 @@ void DBFacade::createOptTable()
 {
 	QSqlQuery query(db);
 	QString sql1 = "create table RoomOpt(RoomID int PRIMARY KEY,OpID int,opt varchar(50),time varchar(50))";
-	query.exec(sql1);
-	qDebug() << db.lastError();
+	query.prepare(sql1);
+	if (!query.exec())
+	{
+		qDebug() << query.lastError();
+	}
 }
 
 char* DBFacade::tmtostring(tm* time)
@@ -74,53 +88,99 @@ tm* DBFacade::gettime()
 	return nowtime;
 }
 
+void DBFacade::updateUI()
+{
+	QSqlQuery query(db);
+	int roomid, stat,speed;
+	float ctemp, ttemp, fee;
+	QString sql = "select RoomID,stat,cur_temp,tar_temp,cur_speed,fee from RoomStat";
+	if (!query.exec(sql))
+	{
+		qDebug() << query.lastError();
+	}
+	while (query.next())
+	{
+		roomid = query.value(0).toInt();
+		stat = query.value(1).toInt();
+		ctemp = query.value(2).toFloat();
+		ttemp = query.value(3).toFloat();
+		speed = query.value(4).toInt();
+		fee = query.value(5).toFloat();
+		RoomUp->update_ui(roomid, stat, ctemp, ttemp, speed,fee);
+	}
+}
+
 void DBFacade::insertRoom(int RoomID, int Mode, int stat, float CurrentTemp, float targetTemp, int speed, float fee, int feerate)
 {
 	QSqlQuery query1(db);
 	QString sql1 = QString("insert into RoomStat values(%1,%2,%3,%4,%5,%6,%7,%8,0)").arg(RoomID).arg(Mode).arg(stat).arg(CurrentTemp).arg(targetTemp).arg(speed).arg(fee).arg(feerate);
-	query1.exec(sql1);
+
+	if (!query1.exec(sql1)) {
+		qDebug() << query1.lastError();
+	}
 }
 
 void DBFacade::insertOpt(int RoomID, int optID, int opt, tm* time)
 {
 	QSqlQuery query;
 	QString sql1 = QString("insert into RoomOpt values(%1,%2,%3,%4)").arg(RoomID).arg(optID).arg(opt).arg(tmtostring(time));
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::insertService(int RoomID, tm* time1, tm* time2, time_t time3, float fee,int speed)
 {
 	QSqlQuery query(db);
 	QString sql1 = QString("issert into RoomService values(%1,%2,%3,%4,%5,&6)").arg(RoomID).arg(tmtostring(time1)).arg(tmtostring(time2)).arg(time3).arg(fee).arg(speed);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::updatecurtemp(int RoomID, float temp)
 {
 	QSqlQuery query(db);
 	QString sql1 = QString("update RoomStat set cur_temp=%1 where RoomID=%2").arg(temp).arg(RoomID);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::updatetartemp(int RoomID, float temp)
 {
 	QSqlQuery query(db);
 	QString sql1 = QString("update RoomStat set tar_temp=%1 where RoomID=%2").arg(temp).arg(RoomID);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	};
+}
+
+void DBFacade::updateStat(int RoomID, int stat)
+{
+	QSqlQuery query(db);
+	QString sql1 = QString("update RoomStat set stat=%1 where RoomID=%2").arg(stat).arg(RoomID);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::updatespeed(int RoomID, int speed)
 {
 	QSqlQuery query(db);
 	QString sql1 = QString("update RoomStat set cur_speed=%1 where RoomID=%2").arg(speed).arg(RoomID);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::updateFee(int RoomID, float fee)
 {
 	QSqlQuery query(db);
 	QString sql1 = QString("update RoomStat set fee=%1 where RoomID=%2").arg(fee).arg(RoomID);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::updateRoom(int RoomId, int state, float cur_temp, float dist_temp, int speed, float fee)
@@ -128,14 +188,18 @@ void DBFacade::updateRoom(int RoomId, int state, float cur_temp, float dist_temp
 	QSqlQuery query(db);
 	QString sql1 = QString("update RoomStat set stat =%1 , set cur_temp = % 2,set tar_temp = %3, set cur_speed = speed,set	fee = %5 where RoomID = % 6").arg(state)
 		.arg(cur_temp).arg(dist_temp).arg(speed).arg(fee);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 void DBFacade::addscheduleCount(int RoomID)
 {
 	QSqlQuery query(db);
 	QString sql1 = QString("update RoomStat set schedulecount= schedulecount+1 where RoomID=%2").arg(RoomID);
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 }
 
 float DBFacade::queryFee(int RoomID)
@@ -153,10 +217,12 @@ float DBFacade::queryFee(int RoomID)
 
 time_t DBFacade::queryServiceTime(int RoomID)
 {
-	QSqlQuery query;
+	QSqlQuery query(db);
 	QString sql1 = QString("select Service_time from RoomService where RoomID=%1 ").arg(RoomID);
 	time_t totaltime=0;
-	query.exec(sql1);
+	if (!query.exec(sql1)) {
+		qDebug() << query.lastError();
+	}
 	while (query.next())
 	{
 		totaltime = totaltime + query.value(0).toInt();
@@ -223,7 +289,9 @@ QVector<QString> DBFacade::queryRecption(int RoomID)
 	reception.push_back(endtitle);
 	reception.push_back(speedtitle);
 	reception.push_back(feetitle);
-	query.exec(sql);
+	if (!query.exec(sql)) {
+		qDebug() << query.lastError();
+	}
 	while (query.next())
 	{
 		reception.push_back(query.value(0).toString());
@@ -255,7 +323,9 @@ QVector<RoomData> DBFacade::queryRoomData(RoomInfo roomlist)
 	{
 		RoomData room;
 		sql = QString("select count(opt) from RoomOpt where RoomID=%1 and opt=%2 or opt=%3").arg(*it).arg(OPEN).arg(CLOSE);
-		query.exec(sql);
+		if (!query.exec(sql)) {
+			qDebug() << query.lastError();
+		}
 		while (query.next())
 		{
 			room.switch_n = query.value(0).toInt();

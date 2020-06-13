@@ -35,3 +35,8 @@ void RoomUpdate::air_StartUp()
 {
     emit signal_air_StartUp();
 }
+
+void RoomUpdate::update_ui(int RoomId, int state, float cur_temp, float dist_temp, int speed, float fee)
+{
+    emit signal_update_ui(RoomId,state, cur_temp,dist_temp,speed,  fee);
+}

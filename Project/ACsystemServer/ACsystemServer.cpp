@@ -108,6 +108,13 @@ void ACsystemServer::ConnectServerScheduler()
     connect(server, &TcpServer::serviceOnOK, this, [=](int roomID, float CurrentTemp) {
         scheduler.changeCurrentTemp(roomID, CurrentTemp);
     });
+    /*
+    待完成收到客户心跳包的操作
+    */
+    //收到客户的心跳包，客户达到目标温度后启动回温程序回心跳包。
+    //connect(server, &TcpServer::heartBeat, this, [=](float CurrentTemp) {
+        //scheduler.changeCurrentTemp()
+    //});
     // 空调开启OK（返回默认参数）
     connect(&scheduler, &Scheduler::turnonOK, server, [=](int roomID, float defaultTemp, int defaultFanSpeed,int Mode, bool succeed = true) {
         server->turnOnAirConditionerBack(roomID, defaultTemp, Mode,defaultFanSpeed, succeed);

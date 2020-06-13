@@ -88,6 +88,7 @@ void Scheduler::requestOff(int RoomID)
 			WaitQueue.deleteRequest(ro->getWaitID());
 			emit serviceStart(ro->getRoomID(), serviceid);
 			RoomUp->update_server(RoomID, 0);
+			systemserver->dbfacade.updateStat(RoomID, CLOSE);
 		}
 		ServiceQueue.deleteserver(ServiceQueue.getServerObjectRoomID(RoomID)->getServerID());
 	}
@@ -96,6 +97,7 @@ void Scheduler::requestOff(int RoomID)
 		int waitID = WaitQueue.getRequestObjectRoomID(RoomID)->getWaitID();
 		WaitQueue.deleteRequest(waitID);
 		RoomUp->update_server(RoomID, 0);
+		systemserver->dbfacade.updateStat(RoomID, CLOSE);
 	}
 	emit turnOffOK(RoomID, true);
 }
@@ -114,11 +116,13 @@ bool Scheduler::changetargetTemp(int RoomID, float targetTemp)
 			ServiceQueue.getServerObjectRoomID(RoomID)->modifyTtemp(targetTemp);
 			ServiceObject* so = ServiceQueue.getServerObjectRoomID(RoomID);
 			RoomUp->update_timing(RoomID, 1, so->getCurrenTemp(), so->getTargetTemp(), so->getFanSpeed(), so->getFee());
+			systemserver->dbfacade.updatetartemp(RoomID, targetTemp);
 		}
 		else {
 			WaitQueue.getRequestObjectRoomID(RoomID)->modifyTtemp(targetTemp);
 			RequestObject* ro = WaitQueue.getRequestObjectRoomID(RoomID);
 			RoomUp->update_timing(RoomID, 2, ro->getCurrenTemp(), ro->getTargetTemp(), ro->getFanSpeed(), ro->getFee());
+			systemserver->dbfacade.updatetartemp(RoomID, targetTemp);
 		}
 		return true;
 		emit changeTempBack(RoomID, true);
@@ -135,6 +139,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 		todo:完成修改服务队列中的风速的调度
 		*/
 		RequestObject* ro = WaitQueue.getRequestObjectShortest(FanSpeed);
+		systemserver->dbfacade.updatespeed(RoomID,FanSpeed);
 		if (ro!= nullptr)
 		{
 			ServiceQueue.getServerObjectRoomID(RoomID)->endWork();
@@ -144,13 +149,16 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 			WaitQueue.deleteRequest(waitid);
 			WaitQueue.addRequestObject(ro2);
 			emit serviceStart(ro->getRoomID(), serveid);
+			systemserver->dbfacade.updateStat(RoomID, SERVICE);
 			RoomUp->update_server(ro->getRoomID(), 1);
 			emit waitStart(ro2->getRoomID(), ro2->getWaitID(), ro2->getTimeSlice());
+			systemserver->dbfacade.updateStat(RoomID, WAIT);
 			RoomUp->update_server(ro2->getRoomID(), 2);
 		}
 	}
 	else {
 		WaitQueue.getRequestObjectRoomID(RoomID)->modifyFanSpeed(FanSpeed);
+		systemserver->dbfacade.updatespeed(RoomID, FanSpeed);
 		/*
 		todo:完成修改等待队列中的风速的调度
 		*/
@@ -168,8 +176,10 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 				WaitQueue.deleteRequest(wID);
 				WaitQueue.addRequestObject(ro2);
 				emit serviceStart(RoomID, sID);
+				systemserver->dbfacade.updateStat(RoomID, SERVICE);
 				RoomUp->update_server(RoomID, 1);
 				emit waitStart(ro2->getRoomID(), wID,ro2->getTimeSlice());
+				systemserver->dbfacade.updateStat(RoomID, WAIT);
 				RoomUp->update_server(ro2->getRoomID(), 2);
 			}
 			else {
@@ -184,8 +194,10 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 					WaitQueue.deleteRequest(wID);
 					WaitQueue.addRequestObject(ro2);
 					emit serviceStart(RoomID, sID);
+					systemserver->dbfacade.updateStat(RoomID, SERVICE);
 					RoomUp->update_server(RoomID, 1);
 					emit waitStart(ro2->getRoomID(), wID, ro2->getTimeSlice());
+					systemserver->dbfacade.updateStat(RoomID, WAIT);
 					RoomUp->update_server(ro2->getRoomID(), 2);
 				}
 				//服务队列中不存在低风速高风速，优先替换高风速服务时长最长的
@@ -198,8 +210,10 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 					WaitQueue.deleteRequest(wID);
 					WaitQueue.addRequestObject(ro2);
 					emit serviceStart(RoomID, sID);
+					systemserver->dbfacade.updateStat(RoomID, SERVICE);
 					RoomUp->update_server(RoomID, 1);
 					emit waitStart(ro2->getRoomID(), wID, ro2->getTimeSlice());
+					systemserver->dbfacade.updateStat(RoomID, SERVICE);
 					RoomUp->update_server(ro2->getRoomID(), 2);
 				}
 			}
@@ -217,8 +231,10 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 				WaitQueue.deleteRequest(wID);
 				WaitQueue.addRequestObject(ro2);
 				emit serviceStart(RoomID, sID);
+				systemserver->dbfacade.updateStat(RoomID, SERVICE);
 				RoomUp->update_server(RoomID, 1);
 				emit waitStart(ro2->getRoomID(), wID, ro2->getTimeSlice());
+				systemserver->dbfacade.updateStat(RoomID, WAIT);
 				RoomUp->update_server(ro2->getRoomID(), 2);
 			}
 			else {
@@ -233,8 +249,10 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 					WaitQueue.deleteRequest(wID);
 					WaitQueue.addRequestObject(ro2);
 					emit serviceStart(RoomID, sID);
+					systemserver->dbfacade.updateStat(RoomID, SERVICE);
 					RoomUp->update_server(RoomID, 1);
 					emit waitStart(ro2->getRoomID(), wID, ro2->getTimeSlice());
+					systemserver->dbfacade.updateStat(RoomID, WAIT);
 					RoomUp->update_server(ro2->getRoomID(), 2);
 				}
 			}
@@ -252,8 +270,10 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 				WaitQueue.deleteRequest(wID);
 				WaitQueue.addRequestObject(ro2);
 				emit serviceStart(RoomID, sID);
+				systemserver->dbfacade.updateStat(RoomID, SERVICE);
 				RoomUp->update_server(RoomID, 1);
 				emit waitStart(ro2->getRoomID(), wID, ro2->getTimeSlice());
+				systemserver->dbfacade.updateStat(RoomID, WAIT);
 				RoomUp->update_server(ro2->getRoomID(), 2);
 			}
 		}
@@ -268,11 +288,13 @@ void Scheduler::changeCurrentTemp(int RoomID, float CurrentTemp)
 		ServiceQueue.getServerObjectRoomID(RoomID)->updatectemp(CurrentTemp);
 		ServiceObject* so = ServiceQueue.getServerObjectRoomID(RoomID);
 		RoomUp->update_timing(RoomID, 1, so->getCurrenTemp(), so->getTargetTemp(), so->getFanSpeed(), so->getFee());
+		systemserver->dbfacade.updatecurtemp(RoomID, CurrentTemp);
 	}
 	else {
 		WaitQueue.getRequestObjectRoomID(RoomID)->updatectemp(CurrentTemp);
 		RequestObject* ro = WaitQueue.getRequestObjectRoomID(RoomID);
 		RoomUp->update_timing(RoomID, 1, ro->getCurrenTemp(), ro->getTargetTemp(), ro->getFanSpeed(), ro->getFee());
+		systemserver->dbfacade.updatecurtemp(RoomID, CurrentTemp);
 	}
 
 }
@@ -284,15 +306,18 @@ void Scheduler::endwork(int ServeID)
 	{
 		RequestObject* ro = WaitQueue.getRequestObjectShortest();
 		emit serviceFinish(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID());
+		systemserver->dbfacade.updateStat(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), CLOSE);
 		RoomUp->update_server(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), 0);
 		RoomUp->update_server(ro->getRoomID(), 1);
 		ServiceQueue.updateService(ServeID, ro);
 		WaitQueue.deleteRequest(ro->getWaitID());
 		emit serviceStart(ro->getRoomID(),ServeID);
+		systemserver->dbfacade.updateStat(ro->getRoomID(),SERVICE);
 		
 	}
 	else {
 		emit serviceFinish(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID());
+		systemserver->dbfacade.updateStat(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), CLOSE);
 		RoomUp->update_server(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), 0);
 		ServiceQueue.deleteserver(ServeID);
 	}
@@ -306,12 +331,14 @@ void Scheduler::endwait(int WaitID)
 	if (so != nullptr)
 	{
 		so->endWork();
+		systemserver->dbfacade.updateStat(so->getRoomID(), WAIT);
 		int sid=so->getServerID();
 		RequestObject* ro2 = new RequestObject();
 		ro2 = ServiceQueue.updateService(so->getServerID(), ro);
 		WaitQueue.deleteRequest(WaitID);
 		WaitQueue.addRequestObject(ro2);
 		emit serviceStart(ro->getRoomID(), sid);
+		systemserver->dbfacade.updateStat(ro->getRoomID(), SERVICE);
 		RoomUp->update_server(ro->getRoomID(), 1);
 		emit waitStart(ro2->getRoomID(), WaitID,ro2->getTimeSlice());
 		RoomUp->update_server(ro2->getRoomID(), 2);

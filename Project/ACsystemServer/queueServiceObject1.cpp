@@ -23,12 +23,7 @@ void queueServiceObject::service()
 		else if (queue[i]->getCurrenTemp() == queue[i]->getTargetTemp())
 		{
 			queue[i]->endWork();
-			/*
-			todo1：服务完成，结果写进数据库
-			connect....
-			todo2: 服务完成，通过信号槽通知sheduler进行调度
-			connect.....
-			*/
+			systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
 			emit servicefinish(queue[i]->getServerID());
 			
 			continue;
@@ -51,13 +46,13 @@ void queueServiceObject::service()
 			{
 				temp = queue[i]->getTargetTemp();
 				fee = temp - queue[i]->getCurrenTemp();
+				systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
+				emit servicefinish(queue[i]->getServerID());
+				break;
 			}
 			queue[i]->updatefee(queue[i]->getFee() + fee);
 			queue[i]->updatectemp(temp);
-			/*
-			todo1：服务完成，结果写进数据库
-			connect....
-			*/
+			systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
 			RoomUp->update_timing(queue[i]->getRoomID(), WORKING, queue[i]->getCurrenTemp(), queue[i]->getTargetTemp(), queue[i]->getFanSpeed(), queue[i]->getFee());
 			qDebug() <<"Roomid:"<< queue[i]->getRoomID()<<"  currenttemp:"<<queue[i]->getCurrenTemp()<<"  fee: "<<queue[i]->getFee()<<"  fanspeed:"<<queue[i]->getFanSpeed();
 			if (temp == queue[i]->getTargetTemp())
@@ -76,13 +71,13 @@ void queueServiceObject::service()
 			{
 				temp = queue[i]->getTargetTemp();
 				fee = temp - queue[i]->getCurrenTemp();
+				systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
+				emit servicefinish(queue[i]->getServerID());
+				break;
 			}
 			queue[i]->updatefee(queue[i]->getFee() + fee);
 			queue[i]->updatectemp(temp);
-			/*
-			todo1：服务完成，结果写进数据库
-			connect....
-			*/
+			systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
 			RoomUp->update_timing(queue[i]->getRoomID(), WORKING, queue[i]->getCurrenTemp(), queue[i]->getTargetTemp(), queue[i]->getFanSpeed(), queue[i]->getFee());
 			qDebug() << "Roomid:" << queue[i]->getRoomID() << "  currenttemp:" << queue[i]->getCurrenTemp() << "  fee: " << queue[i]->getFee() << "  fanspeed:" << queue[i]->getFanSpeed();
 			if (temp == queue[i]->getTargetTemp())
@@ -101,13 +96,13 @@ void queueServiceObject::service()
 			{
 				temp = queue[i]->getTargetTemp();
 				fee = temp - queue[i]->getCurrenTemp();
+				systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
+				emit servicefinish(queue[i]->getServerID());
+				break;
 			}
 			queue[i]->updatefee(queue[i]->getFee() + fee);
 			queue[i]->updatectemp(temp);
-			/*
-			todo1：服务完成，结果写进数据库
-			connect....
-			*/
+			systemserver->dbfacade.updatecurtemp(queue[i]->getRoomID(), queue[i]->getTargetTemp());
 			RoomUp->update_timing(queue[i]->getRoomID(), WORKING, queue[i]->getCurrenTemp(), queue[i]->getTargetTemp(), queue[i]->getFanSpeed(), queue[i]->getFee());
 			qDebug() << "Roomid:" << queue[i]->getRoomID() << "  currenttemp:" << queue[i]->getCurrenTemp() << "  fee: " << queue[i]->getFee() << "  fanspeed:" << queue[i]->getFanSpeed();
 			if (temp == queue[i]->getTargetTemp())

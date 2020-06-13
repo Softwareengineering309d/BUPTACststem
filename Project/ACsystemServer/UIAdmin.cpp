@@ -47,8 +47,8 @@ void Admin::init_rooms()
     // 使用信号槽，以更新房间信息
     //connect(RoomUp,SIGNAL(signal_update_server(int, int)),
      //       this,SLOT(update_server(int, int)));
-    //connect(RoomUp,SIGNAL(signal_update_timing(int, int, float, float, int, float)),
-    //        this,SLOT(update_timing(int, int, float, float, int, float)));
+    connect(RoomUp,SIGNAL(signal_update_ui(int, int, float, float, int, float)),
+            this,SLOT(update_timing(int, int, float, float, int, float)));
 
     qDebug() << "create rooms success.";
 
