@@ -37,7 +37,7 @@
 #define WAIT 2
 //²Ù×÷ÀàÐÍ
 #define OPEN 0
-#define CLOSE 1
+#define RCLOSE 1
 #define CHANGESPEED 2
 #define CHANGETEMP 3
 

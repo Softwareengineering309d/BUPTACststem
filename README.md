@@ -1,5 +1,7 @@
 # BUPTACststem
 
+## 可执行版本：client.rar
+
 # 个人收集的教程：
 
 #### 如何使用github简易教程

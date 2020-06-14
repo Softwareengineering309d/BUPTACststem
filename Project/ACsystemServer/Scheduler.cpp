@@ -48,6 +48,7 @@ void Scheduler::requestOn(int RoomID)
 {
 	float lastfee=0;
 	lastfee=systemserver->dbfacade.queryFee(RoomID);
+	systemserver->dbfacade.insertOpt(RoomID, 1, OPEN, systemserver->dbfacade.gettime());
 	if (ServiceQueue.size() < 3)
 	{
 		int serveID = ServiceQueue.getaserveID();
@@ -77,12 +78,16 @@ void Scheduler::requestOn(int RoomID)
 void Scheduler::requestOff(int RoomID)
 {
 	//关机房间在服务队列中
+	systemserver->dbfacade.insertOpt(RoomID, 1, RCLOSE, systemserver->dbfacade.gettime());
 	if (ServiceQueue.getServerObjectRoomID(RoomID) != nullptr)
 	{
 		RequestObject* ro;
 		if (!WaitQueue.empty())
 		{
 			ro = WaitQueue.getRequestObjectShortest(ServiceQueue.getServerObjectRoomID(RoomID)->getFanSpeed());
+			ServiceObject* so = ServiceQueue.getServerObjectRoomID(RoomID);
+			so->endWork();
+			systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 			int serviceid = ServiceQueue.getServerObjectRoomID(RoomID)->getServerID();
 			ServiceQueue.updateService(serviceid, ro);
 			WaitQueue.deleteRequest(ro->getWaitID());
@@ -104,6 +109,7 @@ void Scheduler::requestOff(int RoomID)
 
 bool Scheduler::changetargetTemp(int RoomID, float targetTemp)
 {
+	systemserver->dbfacade.insertOpt(RoomID, 1, CHANGETEMP, systemserver->dbfacade.gettime());
 	if (targetTemp > hightlimitTemp|| targetTemp < lowlimitTemp)
 	{
 		emit changeFanSpeedBack(RoomID, false);
@@ -132,6 +138,7 @@ bool Scheduler::changetargetTemp(int RoomID, float targetTemp)
 
 void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 {
+	systemserver->dbfacade.insertOpt(RoomID, 1, CHANGESPEED, systemserver->dbfacade.gettime());
 	if (ServiceQueue.getServerObjectRoomID(RoomID) != nullptr)
 	{
 		ServiceQueue.getServerObjectRoomID(RoomID)->modifyFanSpeed(FanSpeed);
@@ -143,6 +150,8 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 		if (ro!= nullptr)
 		{
 			ServiceQueue.getServerObjectRoomID(RoomID)->endWork();
+			ServiceObject* so = ServiceQueue.getServerObjectRoomID(RoomID);
+			systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 			int serveid = ServiceQueue.getServerObjectRoomID(RoomID)->getServerID();
 			int waitid = ro->getWaitID();
 			RequestObject* ro2=ServiceQueue.updateService(serveid, ro);
@@ -170,6 +179,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 			if (so != nullptr)
 			{
 				so->endWork();
+				systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 				int sID = so->getServerID();
 				int wID = ro->getWaitID();
 				RequestObject* ro2 = ServiceQueue.updateService(sID, ro);
@@ -188,6 +198,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 				if (so != nullptr)
 				{
 					so->endWork();
+					systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 					int sID = so->getServerID();
 					int wID = ro->getWaitID();
 					RequestObject* ro2 = ServiceQueue.updateService(sID, ro);
@@ -204,6 +215,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 				else {
 					so = ServiceQueue.getServerObjectLongest(HIGH_FANSPEED);
 					so->endWork();
+					systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 					int sID = so->getServerID();
 					int wID = ro->getWaitID();
 					RequestObject* ro2 = ServiceQueue.updateService(sID, ro);
@@ -225,6 +237,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 			if (so != nullptr)
 			{
 				so->endWork();
+				systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 				int sID = so->getServerID();
 				int wID = ro->getWaitID();
 				RequestObject* ro2 = ServiceQueue.updateService(sID, ro);
@@ -243,6 +256,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 				if (so != nullptr)
 				{
 					so->endWork();
+					systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 					int sID = so->getServerID();
 					int wID = ro->getWaitID();
 					RequestObject* ro2 = ServiceQueue.updateService(sID, ro);
@@ -264,6 +278,7 @@ void Scheduler::changeFanSpeed(int RoomID, int FanSpeed)
 			if (so != nullptr)
 			{
 				so->endWork();
+				systemserver->dbfacade.insertService(RoomID, so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 				int sID = so->getServerID();
 				int wID = ro->getWaitID();
 				RequestObject* ro2 = ServiceQueue.updateService(sID, ro);
@@ -307,6 +322,9 @@ void Scheduler::endwork(int ServeID)
 		RequestObject* ro = WaitQueue.getRequestObjectShortest();
 		emit serviceFinish(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID());
 		systemserver->dbfacade.updateStat(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), CLOSE);
+		ServiceObject* so = ServiceQueue.getServerObjectServerID(ServeID);
+		so->endWork();
+		systemserver->dbfacade.insertService(so->getRoomID(), so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 		RoomUp->update_server(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), 0);
 		RoomUp->update_server(ro->getRoomID(), 1);
 		ServiceQueue.updateService(ServeID, ro);
@@ -319,6 +337,9 @@ void Scheduler::endwork(int ServeID)
 		emit serviceFinish(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID());
 		systemserver->dbfacade.updateStat(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), CLOSE);
 		RoomUp->update_server(ServiceQueue.getServerObjectServerID(ServeID)->getRoomID(), 0);
+		ServiceObject* so = ServiceQueue.getServerObjectServerID(ServeID);
+		so->endWork();
+		systemserver->dbfacade.insertService(so->getRoomID(), so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 		ServiceQueue.deleteserver(ServeID);
 	}
 }
@@ -331,6 +352,7 @@ void Scheduler::endwait(int WaitID)
 	if (so != nullptr)
 	{
 		so->endWork();
+		systemserver->dbfacade.insertService(so->getRoomID(), so->getServeBeginTime(), so->getServeEndTime(), so->getServeTime(), so->getFee(), so->getFanSpeed());
 		systemserver->dbfacade.updateStat(so->getRoomID(), WAIT);
 		int sid=so->getServerID();
 		RequestObject* ro2 = new RequestObject();
